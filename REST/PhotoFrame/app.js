@@ -197,7 +197,7 @@ app.get('/auth/google', passport.authenticate('google', {
 
 // Callback receiver for the OAuth process after log in.
 app.get(
-    '/auth/google/callback',
+    config.oAuthCallbackPath,
     passport.authenticate(
         'google', {failureRedirect: '/', failureFlash: true, session: true}),
     (req, res) => {

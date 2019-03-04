@@ -17,14 +17,15 @@
 const config = {};
 
 // The OAuth client ID from the Google Developers console.
-config.oAuthClientID = 'ADD YOUR CLIENT ID';
+config.oAuthClientID = process.env.G_clientID;
 
 // The OAuth client secret from the Google Developers console.
-config.oAuthclientSecret = 'ADD YOUR CLIENT SECRET';
+config.oAuthclientSecret = process.env.G_clientSecret;
 
 // The callback to use for OAuth requests. This is the URL where the app is
 // running. For testing and running it locally, use 127.0.0.1.
-config.oAuthCallbackUrl = 'http://127.0.0.1:8080/auth/google/callback';
+config.oAuthCallbackPath= '/auth/google/callback';
+config.oAuthCallbackUrl = 'http://127.0.0.1:8080' + config.oAuthCallbackPath;
 
 // The port where the app should listen for requests.
 config.port = 8080;
