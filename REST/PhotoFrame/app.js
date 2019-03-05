@@ -214,10 +214,13 @@ app.get('/search', (req, res) => {
 
 // Loads the album page if the user is authenticated.
 // This page displays a list of albums owned by the user.
-app.get('/album', (req, res) => {
-  renderIfAuthenticated(req, res, 'pages/album');
+app.get('/albums', (req, res) => {
+  renderIfAuthenticated(req, res, 'pages/albums');
 });
 
+app.get('/folder', (req, res) => {
+  renderIfAuthenticated(req, res, 'pages/folder');
+});
 
 // Handles form submissions from the search page.
 // The user has made a selection and wants to load photos into the photo frame

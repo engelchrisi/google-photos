@@ -62,7 +62,7 @@ The call to the API in `libraryApiSearch(authToken, parameters)` shows how to ha
 The album screen (`/album`)  is loaded from a template file located at `views/pages/album.ejs`. When this screen is loaded, the browser makes a request to `/getAlbums` that is received by the server `app.js` in the handler `app.get('/getAlbums', ...)`.
 The method `libraryApiGetAlbums(authToken)` is called to load the albums from the API. This method shows to handle the `nextPageToken` to retrieve a complete list of all albums owned by the user.
 
-The retrieved [`albums`] are returned and displayed through the file `static/js/album.js`. Here the `album` objects are parsed and the title, cover photo and number of items are rendered on screen.
+The retrieved [`albums`] are returned and displayed through the file `static/js/albums.js`. Here the `album` objects are parsed and the title, cover photo and number of items are rendered on screen.
 
 When an album is selected, the handler `app.post('/loadFromAlbum', ...)` receives the id of the album that was picked. Here, a search parameter is constructed and passed to `libraryApiSearch(authToken, parameters)` to load the images.
 
