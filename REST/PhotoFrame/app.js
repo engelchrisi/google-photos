@@ -279,14 +279,12 @@ app.post('/loadFromSearch', async (req, res) => {
   returnPhotos(res, userId, data, parameters);
 });
 
-// Handles selections from the album page where an album ID is submitted.
+// Handles download trigger from the albums page where an album ID is submitted.
 // The user has selected an album and wants to load photos from an album
 // into the photo frame.
-// Submits a search for all media items in an album to the Library API.
-// Returns a list of photos if this was successful, or an error otherwise.
-app.post('/loadFromAlbum', async (req, res) => {
+app.post('/downloadAlbum', async (req, res) => {
   const albumId = req.body.albumId;
-  const userId = req.user.profile.id;
+  // const userId = req.user.profile.id;
   const authToken = req.user.token;
 
   logger.info(`Importing album: ${albumId}`);
@@ -300,7 +298,7 @@ app.post('/loadFromAlbum', async (req, res) => {
   // Submit the search request to the API and wait for the result.
   const data = await libraryApiSearch(authToken, parameters);
 
-  returnPhotos(res, userId, data, parameters)
+  returnOK(res, data)
 });
 
 // Returns all albums owned by the user.
@@ -419,6 +417,13 @@ function returnPhotos(res, userId, data, searchParameter) {
     // Return the photos and parameters back int the response.
     res.status(200).send({photos: data.photos, parameters: searchParameter});
   }
+}
+
+function returnOK(res, data) {
+  if (data.error) {
+    returnError(res, data)
+  }
+  res.status(200).send();
 }
 
 // Responds with an error status code and the encapsulated data.error.

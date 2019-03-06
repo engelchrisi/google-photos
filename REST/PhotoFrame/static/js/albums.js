@@ -15,20 +15,20 @@
 // Notifies the backend to load an album into the photo frame queue.
 // If the request is successful, the photo frame queue is opened,
 // otherwise an error message is shown.
-function loadFromAlbum(name, id) {
+function downloadAlbum(name, id) {
   showLoadingDialog();
   // Make an ajax request to the backend to load from an album.
   $.ajax({
     type: 'POST',
-    url: '/loadFromAlbum',
+    url: '/downloadAlbum',
     dataType: 'json',
-    data: {albumId: id},
+    data: {albumId: id, albumTitle:name},
     success: (data) => {
       console.log('Albums imported:' + JSON.stringify(data.parameters));
       if (data.photos && data.photos.length) {
         // Photos were loaded from the album, open the photo frame preview
         // queue.
-        window.location = '/';
+        //window.location = '/';
       } else {
         // No photos were loaded. Display an error.
         handleError('Couldn\'t import album', 'Album is empty.');
@@ -100,20 +100,19 @@ function listAlbums() {
 
 
         // The 'add to photo frame' link.
-        const linkToAddToPhotoFrame = $('<a />')
+        const linkToDownload = $('<a />')
                                           .addClass('album-title')
                                           .attr('data-id', item.id)
                                           .attr('data-title', item.title);
-        secondaryContentRoot.append(linkToAddToPhotoFrame);
-
+        secondaryContentRoot.append(linkToDownload);
 
         // The button for the 'add to photo frame' link.
-        const addToPhotoFrameButton =
+        const downloadButton =
             $('<button />')
                 .addClass(
                     'mdl-button mdl-js-button mdl-button--raised mdl-button--accent')
-                .text('Add to frame');
-        linkToAddToPhotoFrame.append(addToPhotoFrameButton);
+                .text('Download');
+        linkToDownload.append(downloadButton);
 
         // The 'open in Google Photos' link.
         const linkToGooglePhotos =
@@ -123,7 +122,7 @@ function listAlbums() {
         // The button for the 'open in Google Photos' link.
         const googlePhotosButton = $('<button />')
                                        .addClass('gp-button raised')
-                                       .text('Open in Google Photos');
+                                       .text('');
         linkToGooglePhotos.append(googlePhotosButton);
 
         // Add the list item to the list of albums.
@@ -144,14 +143,14 @@ $(document).ready(() => {
   // Load the list of albums from the backend when the page is ready.
   listAlbums();
 
-  // Clicking the 'add to frame' button starts an import request.
+  // Clicking the 'download' button starts an import request.
   $('#albums').on('click', '.album-title', (event) => {
     const target = $(event.currentTarget);
     const albumId = target.attr('data-id');
     const albumTitle = target.attr('data-title');
 
-    console.log('Importing album: ' + albumTitle);
+    console.log('Trigger download of album: ' + albumTitle);
 
-    loadFromAlbum(albumTitle, albumId);
+    downloadAlbum(albumTitle, albumId);
   });
 });

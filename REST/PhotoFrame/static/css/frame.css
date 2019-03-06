@@ -140,7 +140,7 @@ pre {
   position: relative;
   height: 40px;
   margin: 0;
-  min-width: 241px;
+  /*min-width: 241px;*/
   padding: 0 16px 0 48px;
   display: inline-block;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
