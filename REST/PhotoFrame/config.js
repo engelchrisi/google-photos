@@ -34,7 +34,7 @@ config.port = 8080;
 // plus.me scopes.
 config.scopes = [
   'https://www.googleapis.com/auth/photoslibrary.readonly',
-  // 'profile',
+  'profile', // necessaty for oauth2 library
 ];
 
 // The number of photos to load for search requests.
