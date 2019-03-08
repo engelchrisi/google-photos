@@ -299,7 +299,7 @@ app.post('/downloadAlbum', async (req, res) => {
   const parameters = {albumId};
 
   // Submit the search request to the API and wait for the result.
-  const data = await libraryApiSearch(authToken, parameters);
+  const data = await photoApi.libraryApiSearch(authToken, parameters);
 
   returnOK(res, data)
 });
@@ -319,7 +319,7 @@ app.get('/getAlbums', async (req, res) => {
     logger.verbose('Loading albums from API.');
     // Albums not in cache, retrieve the albums from the Library API
     // and return them
-    const data = await libraryApiGetAlbums(req.user.token);
+    const data = await photoApi.libraryApiGetAlbums(req.user.token);
     if (data.error) {
       // Error occured during the request. Albums could not be loaded.
       returnError(res, data);
@@ -451,53 +451,5 @@ function constructDate(year, month, day) {
 
 
 
-// Returns a list of all albums owner by the logged in user from the Library
-// API.
-async function libraryApiGetAlbums(authToken) {
-  let albums = [];
-  let nextPageToken = null;
-  let error = null;
-  let parameters = {pageSize: config.albumPageSize};
-
-  try {
-    // Loop while there is a nextpageToken property in the response until all
-    // albums have been listed.
-    do {
-      logger.verbose(`Loading albums. Received so far: ${albums.length}`);
-      // Make a GET request to load the albums with optional parameters (the
-      // pageToken if set).
-      const result = await request.get(config.apiEndpoint + '/v1/albums', {
-        headers: {'Content-Type': 'application/json'},
-        qs: parameters,
-        json: true,
-        auth: {'bearer': authToken},
-      });
-
-      logger.debug(`Response: ${result}`);
-
-      if (result && result.albums) {
-        logger.verbose(`Number of albums received: ${result.albums.length}`);
-        // Parse albums and add them to the list, skipping empty entries.
-        const items = result.albums.filter(x => !!x);
-
-        albums = albums.concat(items);
-      }
-      parameters.pageToken = result.nextPageToken;
-      // Loop until all albums have been listed and no new nextPageToken is
-      // returned.
-    } while (parameters.pageToken != null);
-
-  } catch (err) {
-    // If the error is a StatusCodeError, it contains an error.error object that
-    // should be returned. It has a name, statuscode and message in the correct
-    // format. Otherwise extract the properties.
-    error = err.error.error ||
-        {name: err.name, code: err.statusCode, message: err.message};
-    logger.error(error);
-  }
-
-  logger.info('Albums loaded.');
-  return {albums, error};
-}
 
 // [END app]
